@@ -10,5 +10,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     ORIGINS: list[str] = ["*"]
 
+    OPEN_AI_API_KEY: str
+
 
 settings = Settings()
