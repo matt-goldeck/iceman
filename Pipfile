@@ -8,6 +8,13 @@ fastapi = "*"
 uvicorn = "*"
 pydantic-settings = "*"
 openai = "*"
+sqlmodel = "*"
+supabase = "*"
+pip = "*"
+pymupdf = "*"
+python-dotenv = "*"
+psycopg2 = "*"
+python-multipart = "*"
 
 [dev-packages]
 black = "*"
