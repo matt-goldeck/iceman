@@ -9,7 +9,7 @@ from utils.db import get_session
 
 router = APIRouter()
 
-logger = logging.getLogger("")
+logger = logging.getLogger(__name__)
 
 
 @router.post("/upload/")
