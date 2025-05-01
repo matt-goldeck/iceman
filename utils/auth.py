@@ -5,21 +5,14 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer
 
 from sqlmodel import Session
-from supabase import create_client, Client as SupabaseClient
-
 
 from models.user import User
 from repositories.exceptions import ObjectNotFoundException
 from repositories.user import UserRepository
-from settings import settings
 from utils.db import get_session
+from utils.supabase import get_supabase_client
 
-# TODO: Migrate to SQLAlchemy
-supabase: SupabaseClient = create_client(
-    settings.SUPABASE_URL, settings.SUPABASE_SERVICE_KEY
-)
-
-logger = logging.getLogger("uvicorn.error")
+logger = logging.getLogger()
 
 
 async def get_current_user(
@@ -27,6 +20,8 @@ async def get_current_user(
     session: Annotated[Session, Depends(get_session)],
 ) -> User:
     """Dependency for getting the current user from a request's token."""
+    supabase = get_supabase_client()
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
