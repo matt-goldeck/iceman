@@ -13,7 +13,7 @@ from utils.storage import get_or_create_bucket_for_user, upload_file_to_bucket
 logger = logging.getLogger()
 
 
-class ResumeOrchestrator:
+class ResumeService:
     def __init__(self, user: User, session: Session):
         self.user = user
         self.session = session

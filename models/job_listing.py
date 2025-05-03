@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 import uuid
 from pydantic import ConfigDict
 from sqlalchemy.dialects.postgresql import JSONB
@@ -15,14 +15,13 @@ class JobListing(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.now)
 
     user_id: uuid.UUID
-    company_id: uuid.UUID
-    resume_id: uuid.UUID
+    job_company_id: uuid.UUID
 
     title: str
     description: str
     user_notes: Optional[str] = None
 
-    url = Optional[str] = None
+    url: Optional[str] = None
 
 
 class CompatibilityScore(SQLModel, table=True):

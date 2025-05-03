@@ -1,5 +1,4 @@
 import json
-import openai
 from pydantic import ValidationError
 from sqlmodel import Session
 
@@ -35,7 +34,7 @@ class CompatibilityScoringService:
                 "LLM output did not match expected schema"
             ) from e
 
-        return self._create_score(score_data)
+        return self._create_score(score_data, job_listing, resume)
 
     def _create_score(
         self,
@@ -54,20 +53,21 @@ class CompatibilityScoringService:
             )
         )
 
-    def _call_llm(self, user_prompt: str, system_prompt: str) -> dict:
-        self.llm.get_response(input=[system_prompt, user_prompt])
+    def _call_llm(self, user_prompt: LLMInput, system_prompt: LLMInput) -> str:
+        return self.llm.get_response(input=[system_prompt, user_prompt])
 
     def _build_system_prompt(self) -> LLMInput:
         # TODO: Should this have knowledge of the company/industry/job?
         raw_system_prompt = (
-            "You are an expert technical recruiter and career coach. "
-            "You have deep knowledge of the job market and the skills required for various roles."
-            "Given a job listing and a resume, assess compatibility on a scale of 0 to 100."
+            "You are an expert technical recruiter. "
+            "You have deep knowledge of the job market and the skills required for various roles. "
+            "Given a job listing and a resume, assess compatibility on a scale of 0 to 100. "
+            "Be honest and somewhat critical in your assessment. Your goal is to give the most accurate score possible. "
         )
         return LLMInput(role=LLMRole.system, content=raw_system_prompt)
 
     def _build_user_prompt(self, job_listing: JobListing, resume: Resume) -> LLMInput:
-        prompt = f"""
+        raw_user_prompt = f"""
 Given a **job listing** and a **candidate's resume**, assess the candidate's **compatibility score** on a scale of 0 to 100 using the following criteria and weights:
 
 {self._get_scoring_criteria()}
@@ -87,7 +87,7 @@ Given a **job listing** and a **candidate's resume**, assess the candidate's **c
 ### Resume:
 {resume.content}
 """
-        return prompt
+        return LLMInput(role=LLMRole.user, content=raw_user_prompt)
 
     def _get_output_instructions(self) -> str:
         # TODO: make this be dynamic to match the pydantic model

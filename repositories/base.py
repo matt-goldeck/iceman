@@ -23,25 +23,21 @@ class BaseRepository:
         statement = select(self.model_class).where(
             getattr(self.model_class, field) == value
         )
-        results = self.session.exec(statement)
-        try:
-            return results.one_or_none()[0]
-        except sqlalchemy_orm_err.NoResultFound:
+        result = self.session.exec(statement).one_or_none()
+        if result is None:
             raise ObjectNotFoundException()
+        return result[0]
 
     def multi_field_get(self, values: Dict[str, any]) -> SQLModel:
-        """Get an item from this table using multiple fields"""
+        """Get a single item from this table using multiple fields."""
         statement = select(self.model_class)
-        for field in values:
-            statement = statement.where(
-                getattr(self.model_class, field) == values[field]
-            )
+        for field, value in values.items():
+            statement = statement.where(getattr(self.model_class, field) == value)
 
-        results = self.session.exec(statement)
-        try:
-            return results.one()
-        except sqlalchemy_orm_err.NoResultFound:
+        result = self.session.exec(statement).one_or_none()
+        if result is None:
             raise ObjectNotFoundException()
+        return result[0]
 
     def create(self, obj: SQLModel) -> SQLModel:
         """Create a new item in this table"""

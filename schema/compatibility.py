@@ -1,3 +1,6 @@
+from pydantic import BaseModel
+
+
 class ScoreBreakdown(BaseModel):
     skills_match: int
     experience_alignment: int

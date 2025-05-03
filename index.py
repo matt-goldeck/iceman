@@ -4,7 +4,7 @@ import random
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import resume
+from routers import resume, job_listing
 
 app = FastAPI()
 
@@ -35,3 +35,4 @@ async def root():
 
 
 app.include_router(resume.router, prefix="/resume", tags=["resume"])
+app.include_router(job_listing.router, prefix="/job_listing", tags=["job_listing"])
