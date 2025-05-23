@@ -5,6 +5,8 @@
 
 Iceman is the backend for the Afterburner job tracking platform. Built with FastAPI, SQLModel, and Supabase, Iceman does the heavy lifting when it comes to parsing, user data management, and AI-powered tasks.
 
+[Read about it here.](https://www.batstolabs.com/projects/afterburner)
+
 ## 🧰 Tech Stack
 
 - [FastAPI](https://fastapi.tiangolo.com/)
